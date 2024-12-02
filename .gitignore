@@ -1,0 +1,4 @@
+.env
+/zcash/data
+/monero/data
+/docker/database-data

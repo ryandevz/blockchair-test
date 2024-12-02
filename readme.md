@@ -9,6 +9,14 @@ Assignment: [Link](assignment.md)
 - `Docker Compose` equal or higher version v2.29.1-desktop.1
 
 ## Installation
+```bash
+docker compose up -d
+```
+
+## Project structure
+- docker
+- monero
+- zcash
 
 ## Research
 Research: [Link](research.md)

@@ -1,0 +1,124 @@
+#######################################
+# PHP application Docker container
+#######################################
+
+networks:
+  blockchair:
+
+services:
+  app:
+    build:
+      context: ./docker/nginx
+      dockerfile: nginx.dockerfile
+      args:
+        - UID=${UID:-1000}
+        - GID=${GID:-1000}
+    ports:
+      - "80:80"
+    volumes:
+      - ./:/var/www/html:delegated
+    depends_on:
+      - php
+      - postgres
+    networks:
+      - blockchair
+
+  postgres:
+    image: postgres:latest
+    # container_name: postgres
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./docker/database-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: homestead
+      POSTGRES_USER: homestead
+      POSTGRES_PASSWORD: secret
+      SERVICE_TAGS: dev
+      SERVICE_NAME: postgres
+    networks:
+      - blockchair
+
+  php:
+    build:
+      context: ./docker/php
+      dockerfile: php.dockerfile
+      args:
+        - UID=${UID:-1000}
+        - GID=${GID:-1000}
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./:/var/www/html:delegated
+    networks:
+      - blockchair
+
+  composer:
+    build:
+      context: ./docker/php
+      dockerfile: php.dockerfile
+      args:
+        - UID=${UID:-1000}
+        - GID=${GID:-1000}
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - php
+    entrypoint: [ 'composer', '--ignore-platform-reqs' ]
+    networks:
+      - blockchair
+
+  npm:
+    image: node:current-alpine
+    volumes:
+      - ./:/var/www/html
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+      - "5173:5173"
+    working_dir: /var/www/html
+    entrypoint: [ 'npm' ]
+    networks:
+      - blockchair
+
+  artisan:
+    build:
+      context: ./docker/php
+      dockerfile: php.dockerfile
+      args:
+        - UID=${UID:-1000}
+        - GID=${GID:-1000}
+    volumes:
+      - ./:/var/www/html:delegated
+    depends_on:
+      - postgres
+    entrypoint: [ 'php', '/var/www/html/artisan' ]
+    networks:
+      - blockchair
+
+  monerod:
+    container_name: monerod
+    build:
+      context: .
+      dockerfile: monero/Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ${DATA_DIR:-./data}:/data
+    ports:
+      - ${P2P_PORT:-18080}:18080                    # p2p
+      - ${RESTRICTED_PORT:-18081}:18081             # restricted rpc
+      - 127.0.0.1:${ZMQ_PORT:-18082}:18082          # zmq
+      - 127.0.0.1:${UNRESTRICTED_PORT:-18083}:18083 # unrestricted rpc
+    command:
+      monerod --data-dir=/data --p2p-bind-ip=0.0.0.0 --p2p-bind-port=18080 --rpc-restricted-bind-ip=0.0.0.0 --rpc-restricted-bind-port=18081 --zmq-rpc-bind-ip=0.0.0.0 --zmq-rpc-bind-port=18082 --rpc-bind-ip=0.0.0.0 --rpc-bind-port=18083 --non-interactive --confirm-external-bind --public-node --log-level=0 --enable-dns-blocklist --rpc-ssl=disabled
+
+  zcash:
+    image: electriccoinco/zcashd:latest
+    container_name: zcashd
+    volumes:
+      - ./zcash/data:/srv/zcashd/.zcash
+      - ./zcash/zcash.conf:/srv/zcashd/.zcash/zcash.conf
+    ports:
+      - "8232:8232"
