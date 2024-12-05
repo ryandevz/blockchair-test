@@ -12,11 +12,11 @@ WORKDIR /var/www/html
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
-RUN addgroup -g ${GID} --system laravel
-RUN adduser -G laravel --system -D -s /bin/sh -u ${UID} laravel
+RUN addgroup -g ${GID} --system blockchair
+RUN adduser -G blockchair --system -D -s /bin/sh -u ${UID} blockchair
 
-RUN sed -i "s/user = www-data/user = laravel/g" /usr/local/etc/php-fpm.d/www.conf
-RUN sed -i "s/group = www-data/group = laravel/g" /usr/local/etc/php-fpm.d/www.conf
+RUN sed -i "s/user = www-data/user = blockchair/g" /usr/local/etc/php-fpm.d/www.conf
+RUN sed -i "s/group = www-data/group = blockchair/g" /usr/local/etc/php-fpm.d/www.conf
 RUN echo "php_admin_flag[log_errors] = on" >> /usr/local/etc/php-fpm.d/www.conf
 
 # For MySQL or MariaDB
@@ -28,6 +28,6 @@ RUN set -ex \
 
 RUN docker-php-ext-install pdo pdo_pgsql
 
-USER laravel
+USER blockchair
 
 CMD ["php-fpm", "-y", "/usr/local/etc/php-fpm.conf", "-R"]

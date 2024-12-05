@@ -10,7 +10,25 @@ Assignment: [Link](assignment.md)
 
 ## Installation
 ```bash
+cp .env.example .env
 docker compose up -d
+```
+
+Interactive
+```bash
+docker exec -it blockchair-test-php-1 /bin/sh
+composer dump-autoload
+```
+
+Give access for web server for logging
+```bash
+sudo chown -R www-data:www-data /var/www/html/logs
+sudo chmod 755 /var/www/html/logs
+```
+
+Directly run script:
+```bash
+docker compose run --rm php php public/index.php
 ```
 
 ## Project structure

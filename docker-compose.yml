@@ -1,5 +1,5 @@
 #######################################
-# PHP application Docker container
+# Blockchair PHP Application
 #######################################
 
 networks:
@@ -67,34 +67,6 @@ services:
     depends_on:
       - php
     entrypoint: [ 'composer', '--ignore-platform-reqs' ]
-    networks:
-      - blockchair
-
-  npm:
-    image: node:current-alpine
-    volumes:
-      - ./:/var/www/html
-    ports:
-      - "3000:3000"
-      - "3001:3001"
-      - "5173:5173"
-    working_dir: /var/www/html
-    entrypoint: [ 'npm' ]
-    networks:
-      - blockchair
-
-  artisan:
-    build:
-      context: ./docker/php
-      dockerfile: php.dockerfile
-      args:
-        - UID=${UID:-1000}
-        - GID=${GID:-1000}
-    volumes:
-      - ./:/var/www/html:delegated
-    depends_on:
-      - postgres
-    entrypoint: [ 'php', '/var/www/html/artisan' ]
     networks:
       - blockchair
 

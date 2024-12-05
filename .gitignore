@@ -2,3 +2,5 @@
 /zcash/data
 /monero/data
 /docker/database-data
+/vendor
+/logs/app.log
