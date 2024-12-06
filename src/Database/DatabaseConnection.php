@@ -1,6 +1,8 @@
 <?php
 namespace App\Database;
 
+use PDO;
+
 class DatabaseConnection {
     private $connection;
     private static $instance = null;

@@ -33,11 +33,9 @@ services:
     volumes:
       - ./docker/database-data:/var/lib/postgresql/data
     environment:
-      POSTGRES_DB: homestead
-      POSTGRES_USER: homestead
-      POSTGRES_PASSWORD: secret
-      SERVICE_TAGS: dev
-      SERVICE_NAME: postgres
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     networks:
       - blockchair
 
@@ -78,6 +76,7 @@ services:
     restart: unless-stopped
     volumes:
       - ${DATA_DIR:-./data}:/data
+      - ./monero/monerod.conf:/data/monerod.conf
     ports:
       - ${P2P_PORT:-18080}:18080                    # p2p
       - ${RESTRICTED_PORT:-18081}:18081             # restricted rpc

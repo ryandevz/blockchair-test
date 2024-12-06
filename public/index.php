@@ -22,14 +22,25 @@ try {
 $logger = new Logger($env->get('LOG_PATH'), $env->get('LOG_LEVEL'));
 $logger->info('Application api started');
 
+$configuration = [
+    'host' => $env->get('DB_HOST'),
+    'port' => $env->get('DB_PORT'),
+    'dbname' => $env->get('DB_NAME'),
+    'user' => $env->get('DB_USER'),
+    'password' => $env->get('DB_PASSWORD')
+];
+
+/* Get database instance */
+$database = DatabaseConnection::getInstance($configuration);
+
 $request = new Request();
 $response = new Response();
 $router = new Router();
-$dataController = new DataController();
+$dataController = new DataController($env, $logger, $database);
 
 /* Define routes */
 $router->addRoute('GET', '/api/monero', [$dataController, 'getMonero']);
-$router->addRoute('POST', '/api/zcash', [$dataController, 'getZcash']);
+$router->addRoute('GET', '/api/zcash', [$dataController, 'getZcash']);
 
 /* Handle the request */
 $router->dispatch($request, $response);

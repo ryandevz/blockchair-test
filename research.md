@@ -16,7 +16,7 @@ rpc: https://zcash.github.io/rpc/
 ## Blockchain Forks
 ### Monero
 - `hard_fork_info` version
-- `get_v ersion` have all hard fork version and their height
+- `get_version` have all hard fork version and their height
 - check new version of github https://api.github.com/repos/monero-project/monero/releases/latest
 - write notification system
 
@@ -28,12 +28,13 @@ rpc: https://zcash.github.io/rpc/
 - write notification system
 
 ## Market Capitalization
-- Market Capitalization = Current Price x Circulating Supply.
+- Market Capitalization = Current Price x Circulating Supply
+- In monero `total_emission` is equal to circulating supply.
 
 ## To-Do
 - [x] Download and prepare blockchain nodes  
 - [x] RPC connection
-- [x] Create docker enviroment
+- [x] Create docker enviroment / Infrastructure
     - [x] Monero
     - [x] Zcash
     - [x] PostgreSQL
@@ -42,20 +43,21 @@ rpc: https://zcash.github.io/rpc/
         - [x] Script
 - [ ] PHP Application
     - [x] Create .env loader
-    - [x] Create loggin interface
+    - [x] Create logger interface
     - [x] Create database connection
     - [x] Create cli app for monero
         - [x] Interface for RPC connection
     - [x] Create cli app for zcash
         - [x] Interface for RPC connection
-    - [ ] Create rest api
-    - [ ] Block and transaction synchronization
+    - [x] Create rest api
+    - [x] Block and transaction synchronization
+    - [ ] Database table design/architecture
     - [ ] Database migration
-    - [ ] Create soft and hard block notification system
+    - [ ] Create soft and hard fork notification system
         - [ ] Check RPC height version
         - [ ] Check github release update
         - [ ] In database mark block that forked and planned height fork
-        - [ ] Send email of telegram notification that fork is coming
+        - [ ] Send email or telegram notification of incoming fork
     - [ ] Market Capitalization?
         - [ ] Write some postgresql procedure to aggregate data?
         - [ ] Research shielded/protected block/transaction to find way approximately analyze capitalization

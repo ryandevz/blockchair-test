@@ -29,7 +29,6 @@ try {
     );
     
     $info = $zcash->getBlockchainInfo();
-    print_r($info);
 } catch (\RuntimeException $e) {
     $logger->error($e->getMessage());
 }

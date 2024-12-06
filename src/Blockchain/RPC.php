@@ -22,15 +22,7 @@ class RPC {
             'Content-Type: application/json',
         ];
     }
-
-    /**
-     * Makes an RPC call to the cryptocurrency daemon
-     *
-     * @param string $method The RPC method to call
-     * @param array $params Parameters for the RPC method
-     * @return array Response from the RPC server
-     * @throws \RuntimeException If the request fails
-     */
+    
     public function call(string $method, array $params = []): array
     {
         $payload = json_encode([

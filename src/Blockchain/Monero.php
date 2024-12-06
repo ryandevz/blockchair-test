@@ -9,4 +9,13 @@ class Monero extends RPC {
     {
         return $this->call('get_version');
     }
+
+    public function getBlock($height): array
+    {
+        return $this->call('get_block', ['height' => $height]);
+    }
+
+    // public function getTransaction($txs_hashes): array {
+    //     return $this->requestWithInterface('get_transactions', ['txs_hashes' => [$txs_hashes], 'decode_as_json' => true]);
+    // }
 }
