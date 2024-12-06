@@ -16,7 +16,7 @@ rpc: https://zcash.github.io/rpc/
 ## Blockchain Forks
 ### Monero
 - `hard_fork_info` version
-- `get_version` have all hard fork version and their height
+- `get_v ersion` have all hard fork version and their height
 - check new version of github https://api.github.com/repos/monero-project/monero/releases/latest
 - write notification system
 
@@ -37,18 +37,20 @@ rpc: https://zcash.github.io/rpc/
     - [x] Monero
     - [x] Zcash
     - [x] PostgreSQL
-    - [ ] PHP application
-        - [ ] API
+    - [x] PHP application
+        - [x] API
         - [x] Script
 - [ ] PHP Application
     - [x] Create .env loader
     - [x] Create loggin interface
     - [x] Create database connection
-    - [ ] Create cli app for monero
-        - [ ] Interface for RPC connection
-    - [ ] Create cli app for zcash
-        - [ ] Interface for RPC connection
+    - [x] Create cli app for monero
+        - [x] Interface for RPC connection
+    - [x] Create cli app for zcash
+        - [x] Interface for RPC connection
     - [ ] Create rest api
+    - [ ] Block and transaction synchronization
+    - [ ] Database migration
     - [ ] Create soft and hard block notification system
         - [ ] Check RPC height version
         - [ ] Check github release update
