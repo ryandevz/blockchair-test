@@ -68,4 +68,46 @@ class RPC {
 
         return $decoded['result'] ?? [];
     }
+
+    public function callExtended(string $method, array $params = []): array
+    {
+        $parts = parse_url($this->url);
+        $trimmed_url = $parts['scheme'] . "://" . $parts['host'] . ":" . $parts['port'] . "/" . $method;
+
+        $ch = curl_init();
+        curl_setopt_array($ch, [
+            CURLOPT_URL => $trimmed_url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => json_encode($params),
+            CURLOPT_HTTPHEADER => $this->headers,
+            CURLOPT_TIMEOUT => $this->timeout
+        ]);
+
+        if ($this->username && $this->password) {
+            curl_setopt($ch, CURLOPT_USERPWD, $this->username . ':' . $this->password);
+        }
+
+        $response = curl_exec($ch);
+        $error = curl_error($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($error) {
+            throw new \RuntimeException("CURL Error: $error");
+        }
+
+        if ($httpCode !== 200) {
+            throw new \RuntimeException("HTTP Error: $httpCode");
+        }
+
+        $decoded = json_decode($response, true);
+        if (isset($decoded['error']) && $decoded['error']) {
+            throw new \RuntimeException(
+                "RPC Error: " . $decoded['error']['message'] ?? 'Unknown error'
+            );
+        }
+
+        return $decoded ?? [];
+    }
 }

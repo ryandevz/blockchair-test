@@ -51,8 +51,8 @@ rpc: https://zcash.github.io/rpc/
         - [x] Interface for RPC connection
     - [x] Create rest api
     - [x] Block and transaction synchronization
-    - [ ] Database table design/architecture
-    - [ ] Database migration
+    - [x] Database table design/architecture
+    - [x] Database migration
     - [ ] Create soft and hard fork notification system
         - [ ] Check RPC height version
         - [ ] Check github release update

@@ -21,10 +21,10 @@ class DataController
 
     public function getMonero(Request $request, Response $response): void
     {
-        // $data = $this->database->fetchAll("SELECT * FROM blocks");
+        $data = $this->database->fetchAll("SELECT * FROM monero_blocks limit 10");
 
         $response->withStatus(200)
-            ->withBody(['status' => 'success', 'data' => 'monero'])
+            ->withBody(['status' => 'success', 'data' => $data])
             ->send();
     }
 

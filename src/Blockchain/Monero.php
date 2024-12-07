@@ -15,7 +15,7 @@ class Monero extends RPC {
         return $this->call('get_block', ['height' => $height]);
     }
 
-    // public function getTransaction($txs_hashes): array {
-    //     return $this->requestWithInterface('get_transactions', ['txs_hashes' => [$txs_hashes], 'decode_as_json' => true]);
-    // }
+    public function getTransaction(array $txs_hashes): array {
+        return $this->callExtended('get_transactions', ['txs_hashes' => $txs_hashes, 'decode_as_json' => true]);
+    }
 }

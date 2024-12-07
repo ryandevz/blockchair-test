@@ -24,11 +24,40 @@ class MoneroSynchronizer {
         try {
             $block = $this->monero->getBlock($height);
 
-            /* Insert */
+            /* Insert block */
             $this->database->query(
-                "INSERT INTO blocks (id, name) VALUES (?, ?)",
-                [$block['block_header']['height'], $block['block_header']['hash']]
+                "INSERT INTO monero_blocks (height, hash, miner_tx_hash, difficulty, size, timestamp, transactions, major_version, minor_version, block, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT DO NOTHING",
+                [
+                    $block['block_header']['height'], 
+                    $block['block_header']['hash'],
+                    $block['block_header']['miner_tx_hash'],
+                    $block['block_header']['difficulty'],
+                    $block['block_header']['block_size'],
+                    $block['block_header']['timestamp'],
+                    count($block['tx_hashes'] ?? []),
+                    $block['block_header']['major_version'],
+                    $block['block_header']['minor_version'],
+                    json_encode($block),
+                    date('Y-m-d H:i:s'),
+                    date('Y-m-d H:i:s')
+                ]
             );
+
+            $transaction = $this->monero->getTransaction($block['tx_hashes']);
+
+            foreach ($transaction['txs'] ?? [] as $key => $value) {
+                /* Insert transaction */
+                $this->database->query(
+                    "INSERT INTO monero_transactions (height_id, tx_hash, transaction, created_at, updated_at) VALUES (?, ?, ?, ?, ?) ON CONFLICT DO NOTHING",
+                    [
+                        $value['block_height'], 
+                        $value['tx_hash'],
+                        json_encode($value),
+                        date('Y-m-d H:i:s'),
+                        date('Y-m-d H:i:s')
+                    ]
+                );
+            }
 
             $this->logger->info("Successfully synchronized block {$height}");
             return true;
@@ -80,11 +109,11 @@ try {
     $sync = new MoneroSynchronizer($env, $logger, $database);
 
     /* Synchronization single block */
-    // $sync->synchronizeBlock(1873676);
+    // $sync->synchronizeBlock(1873006);
 
     /* Synchronization range of block */
-    // $syncResult = $sync->synchronizeBlockRange(1873000, 1873009);
-    // $logger->info("success: " . $syncResult['success'] . ' and ' . 'failed: ' . $syncResult['failed']);
+    $syncResult = $sync->synchronizeBlockRange(1873000, 1873009);
+    $logger->info("success: " . $syncResult['success'] . ' and ' . 'failed: ' . $syncResult['failed']);
 
     /* Fork notification */
     
