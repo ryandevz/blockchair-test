@@ -9,4 +9,18 @@ class Zcash extends RPC {
     {
         return $this->call('getblockchaininfo');
     }
+
+    public function getInfo(): array
+    {
+        return $this->call('getinfo');
+    }
+
+    public function getBlock($height): array
+    {
+        return $this->call('getblock', [$height]);
+    }
+
+    public function getTransaction(array $params): array {
+        return $this->call('gettransaction', $params);
+    }
 }

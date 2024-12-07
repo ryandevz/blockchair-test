@@ -31,6 +31,18 @@ Directly run script:
 docker compose run --rm php php public/index.php
 ```
 
+Run monero single block sync
+```bash
+php monero.php 1873006
+php zcash.php 106129
+```
+
+Run monero range block sync
+```bash
+php monero.php 1873000 1873009
+php zcash.php 106120 106129
+```
+
 ## Project structure
 - docker
 - monero

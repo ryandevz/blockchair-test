@@ -10,6 +10,11 @@ class Monero extends RPC {
         return $this->call('get_version');
     }
 
+    public function getInfo(): array
+    {
+        return $this->call('get_info');
+    }
+
     public function getBlock($height): array
     {
         return $this->call('get_block', ['height' => $height]);

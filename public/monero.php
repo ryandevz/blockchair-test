@@ -5,7 +5,7 @@ use App\Config\Env;
 use App\Utils\Logger;
 use App\Database\DatabaseConnection;
 use App\Blockchain\Monero;
-use App\Blockchain\Zcash;
+use App\Blockchain\MoneroForkMonitor;
 
 class MoneroSynchronizer {
     private $env;
@@ -74,16 +74,22 @@ class MoneroSynchronizer {
         ];
         
         for ($height = $start; $height <= $end; $height++) {
+            echo "\rSynchronized $height blocks out of $end";
+            flush();
+
             if ($this->synchronizeBlock($height)) {
                 $results['success']++;
             } else {
                 $results['failed']++;
             }
         }
-        
+        echo "\n";
+
         return $results;
     }
 }
+
+$arguments = array_slice($argv, 1);
 
 try {
     /* Load environment variables */
@@ -108,16 +114,20 @@ try {
     /* Initialize the synchronizer */
     $sync = new MoneroSynchronizer($env, $logger, $database);
 
-    /* Synchronization single block */
-    // $sync->synchronizeBlock(1873006);
-
-    /* Synchronization range of block */
-    $syncResult = $sync->synchronizeBlockRange(1873000, 1873009);
-    $logger->info("success: " . $syncResult['success'] . ' and ' . 'failed: ' . $syncResult['failed']);
-
-    /* Fork notification */
+    if (count($arguments) == 1) {
+        /* Synchronization single block */
+        $sync->synchronizeBlock($arguments[0]);
+    }
     
-    /* Get last known block */
+    if (count($arguments) == 2) {
+        /* Synchronization range of block */
+        $syncResult = $sync->synchronizeBlockRange($arguments[0], $arguments[1]);
+        $logger->info("success: " . $syncResult['success'] . ' and ' . 'failed: ' . $syncResult['failed']);
+    }
+    
+    /* Fork notification */
+    $monitor = new MoneroForkMonitor();
+    $monitor->checkForUpdates();
 
 } catch (\RuntimeException $e) {
     $logger->error($e->getMessage());

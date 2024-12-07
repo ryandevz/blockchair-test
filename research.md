@@ -29,7 +29,26 @@ rpc: https://zcash.github.io/rpc/
 
 ## Market Capitalization
 - Market Capitalization = Current Price x Circulating Supply
-- In monero `total_emission` is equal to circulating supply.
+
+### Monero
+In monero based coinmarketcap.com information circulating supply count as `total_emission` parameter.
+
+Since Monero is a privacy-focused cryptocurrency that hides transaction amounts, we need alternative methods to estimate market cap:
+1. Emission curve analysis - Monero has a known emission schedule. Calculate total coins in circulation using block height and emission formula.
+2. Exchange volume correlation - Compare known exchange volume patterns with blockchain metrics like transaction counts or ring signature data.  
+
+Note that any estimates will have significant uncertainty due to Monero's privacy features.
+
+### Zcash
+For Zcash, market cap can be calculated through:
+
+1. Public (t-address) transactions - direct balance summation
+2. Shielded (z-address) - metadata analysis and shielded pool volume analysis
+3. Mixed transactions - tracking transfers between t and z addresses to estimate proportions
+
+Total market cap = sum of public balances + estimated shielded transactions based on statistical methods.
+
+**Unfortunately, without a fully indexed node I can't analyze transactions.**
 
 ## To-Do
 - [x] Download and prepare blockchain nodes  
@@ -41,7 +60,7 @@ rpc: https://zcash.github.io/rpc/
     - [x] PHP application
         - [x] API
         - [x] Script
-- [ ] PHP Application
+- [x] PHP Application
     - [x] Create .env loader
     - [x] Create logger interface
     - [x] Create database connection
@@ -53,12 +72,16 @@ rpc: https://zcash.github.io/rpc/
     - [x] Block and transaction synchronization
     - [x] Database table design/architecture
     - [x] Database migration
-    - [ ] Create soft and hard fork notification system
-        - [ ] Check RPC height version
-        - [ ] Check github release update
-        - [ ] In database mark block that forked and planned height fork
-        - [ ] Send email or telegram notification of incoming fork
-    - [ ] Market Capitalization?
-        - [ ] Write some postgresql procedure to aggregate data?
-        - [ ] Research shielded/protected block/transaction to find way approximately analyze capitalization
+    - [x] Accept arguments for scripts
+    - [x] Create soft and hard fork notification system
+        - [x] Check RPC height version
+        - [x] Check github release update
+        - [ ] ~~In database mark block that forked and planned height fork~~
+        - [x] Send email or telegram notification of incoming fork
+    - [x] Market Capitalization?
+        - [ ] ~~Write some postgresql procedure to aggregate data?~~
+        - [x] Research shielded/protected block/transaction to find way approximately analyze capitalization
+            - [x] Analyze zcash/monero block and transaction structure
+            - [ ] ~~Analyze monero emission formula~~
+            - [ ] ~~Identify tx type of zcash [coinbase, public, full shielded, shielded z to t, shielded t to z]~~
 - [ ] Documentation
