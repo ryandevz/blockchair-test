@@ -8,6 +8,7 @@ class Request implements RequestInterface
     private array $headers;
     private string $method;
     private array $params;
+    private array $routeParams = [];
     private string $uri;
 
     public function __construct()
@@ -36,6 +37,16 @@ class Request implements RequestInterface
     public function getParams(): array
     {
         return $this->params;
+    }
+
+    public function setRouteParams(array $params): void 
+    {
+        $this->routeParams = $params;
+    }
+
+    public function getRouteParam(string $name): ?string 
+    {
+        return $this->routeParams[$name] ?? null;
     }
 
     private function getRequestHeaders(): array

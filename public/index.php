@@ -42,5 +42,11 @@ $dataController = new DataController($env, $logger, $database);
 $router->addRoute('GET', '/api/monero', [$dataController, 'getMonero']);
 $router->addRoute('GET', '/api/zcash', [$dataController, 'getZcash']);
 
+$router->addRoute('GET', '/api/monero/block/{id}', [$dataController, 'moneroBlock']);
+$router->addRoute('GET', '/api/zcash/block/{id}', [$dataController, 'zcashBlock']);
+
+$router->addRoute('GET', '/api/monero/transaction/{id}', [$dataController, 'moneroTransaction']);
+$router->addRoute('GET', '/api/zcash/transaction/{id}', [$dataController, 'zcashTransaction']);
+
 /* Handle the request */
 $router->dispatch($request, $response);

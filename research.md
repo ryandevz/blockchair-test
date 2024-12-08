@@ -84,4 +84,4 @@ Total market cap = sum of public balances + estimated shielded transactions base
             - [x] Analyze zcash/monero block and transaction structure
             - [ ] ~~Analyze monero emission formula~~
             - [ ] ~~Identify tx type of zcash [coinbase, public, full shielded, shielded z to t, shielded t to z]~~
-- [ ] Documentation
+- [x] Documentation
